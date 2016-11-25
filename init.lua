@@ -4,7 +4,7 @@ local creative = minetest.setting_getbool("creative_mode")
 
 minetest.register_node("flowerpots:pot", {
 	description = "Flower Pot",
-	tiles = {"default_dirt.png", "flowerpots_pot.png"},
+	tiles = {{name = "default_dirt.png", backface_culling = true}, {name = "flowerpots_pot.png", backface_culling = true}},
 	paramtype = "light",
 	drawtype = "mesh",
 	mesh = "flowerpots_pot.obj",
@@ -49,9 +49,13 @@ minetest.register_craft({
 })
 
 function flowerpots.addplantlike(name, desc, plant, tile, box)
+	if type(tile) == "string" then
+		tile = {name = tile, backface_culling = false}
+	end
+
 	minetest.register_node(":flowerpots:pot_"..name, {
 		description = desc.." in a pot.",
-		tiles = {tile, "default_dirt.png", "flowerpots_pot.png"},
+		tiles = {tile, {name = "default_dirt.png", backface_culling = true}, {name = "flowerpots_pot.png", backface_culling = true}},
 		paramtype = "light",
 		drawtype = "mesh",
 		mesh = "flowerpots_pot_plantlike.obj",
@@ -89,9 +93,17 @@ function flowerpots.addplantlike(name, desc, plant, tile, box)
 end
 
 function flowerpots.addplantblock(name, desc, plant, tile_top, tile_side)
+	if type(tile_top) == "string" then
+		tile_top = {name = tile_top, backface_culling = true}
+	end
+
+	if type(tile_side) == "string" then
+		tile_side = {name = tile_side, backface_culling = true}
+	end
+
 	minetest.register_node(":flowerpots:pot_"..name, {
 		description = desc.." in a pot.",
-		tiles = {tile_top, tile_side, "flowerpots_pot.png"},
+		tiles = {tile_top, tile_side, {name = "flowerpots_pot.png", backface_culling = true}},
 		paramtype = "light",
 		drawtype = "mesh",
 		mesh = "flowerpots_pot_plantblock.obj",
@@ -123,6 +135,10 @@ function flowerpots.addplantblock(name, desc, plant, tile_top, tile_side)
 	})
 
 	flowerpots.plants[plant] = "flowerpots:pot_"..name
+end
+
+if minetest.get_modpath("treasurer") then
+	treasurer.register_treasure("flowerpots:pot",0.006,5,{1,2},nil,"deco")
 end
 
 flowerpots.addplantlike("sapling", "Sapling", "default:sapling", "default_sapling.png", {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25})

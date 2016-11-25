@@ -1,35 +1,12 @@
-flowerpots by [pithydon]
+flowerpots by pithydon (2016)
 
-code license:
+Adds flower pots that plants can be placed in.
 
-```txt
-This is free and unencumbered software released into the public domain.
+Forum: https://forum.minetest.net/viewtopic.php?f=11&t=15265
 
-Anyone is free to copy, modify, publish, use, compile, sell, or
-distribute this software, either in source code form or as a compiled
-binary, for any purpose, commercial or non-commercial, and by any
-means.
+Github: https://github.com/pithydon/flowerpots
 
-In jurisdictions that recognize copyright laws, the author or authors
-of this software dedicate any and all copyright interest in the
-software to the public domain. We make this dedication for the benefit
-of the public at large and to the detriment of our heirs and
-successors. We intend this dedication to be an overt act of
-relinquishment in perpetuity of all present and future rights to this
-software under copyright law.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
-OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-```
-
-For more information, please refer to <http://unlicense.org>
-
-texture and model license:
+License for all of this mod is "CC0", see below.
 
 ```txt
 CREATIVE COMMONS CORPORATION IS NOT A LAW FIRM AND DOES NOT PROVIDE LEGAL SERVICES. DISTRIBUTION OF THIS DOCUMENT DOES NOT CREATE AN ATTORNEY-CLIENT RELATIONSHIP. CREATIVE COMMONS PROVIDES THIS INFORMATION ON AN "AS-IS" BASIS. CREATIVE COMMONS MAKES NO WARRANTIES REGARDING THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS PROVIDED HEREUNDER, AND DISCLAIMS LIABILITY FOR DAMAGES RESULTING FROM THE USE OF THIS DOCUMENT OR THE INFORMATION OR WORKS PROVIDED HEREUNDER.
@@ -72,5 +49,3 @@ examples
 flowerpots.addplantlike("rose", "Rose", "flowers:rose", "flowers_rose.png", {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25})
 flowerpots.addplantblock("cactus", "Cactus", "default:cactus", "default_cactus_top.png", "default_cactus_side.png")
 ```
-
-[pithydon]: <https://github.com/pithydon>
