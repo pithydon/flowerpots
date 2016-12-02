@@ -2,7 +2,7 @@ flowerpots by pithydon (2016)
 
 Adds flower pots that plants can be placed in.
 
-Forum: https://forum.minetest.net/viewtopic.php?f=11&t=15265
+Forum: https://forum.minetest.net/viewtopic.php?t=15265
 
 Github: https://github.com/pithydon/flowerpots
 
@@ -38,14 +38,59 @@ For these and/or other purposes and motivations, and without any expectation of 
 
 mod api:
 
+For plants with plantlike drawtype use...
+
+	flowerpots.addplantlike(subname, subdescription, item_to_place_in_pot, texture, selection_box)
+
+For plants that are flat on the ground use...
+
+	flowerpots.addflatplant(subname, subdescription, item_to_place_in_pot, texture, selection_box)
+
+For plants that are a block use...
+
+	flowerpots.addplantblock(subname, subdescription, item_to_place_in_pot, texture)
+
+inputs
+* subname, -- Full name will be ["flowerpots:pot_"..subname].
+* subdescription, -- Full description will be [subdescription.." in a pot."].
+* item_to_place_in_pot, -- If item hase on_place then on_place must be overwritten.
+* texture, -- Single texture, in flowerpots.addplantblock() it can also be a table up to 5 textures +Y, +X, -X, +Z, -Z.
+* selection_box, -- optional
+
+For a custom plant use...
+
 ```lua
-flowerpots.addplantlike(subname, subdescription, item_to_place_in_pot, texture, selection_box)
-flowerpots.addplantblock(subname, subdescription, item_to_place_in_pot, texture_top, texture_side)
+flowerpots.plants["item_to_place_in_pot"] = "plant_in_pot_node_name"
 ```
+
+You need to register your own "plant_in_pot_node" for a custom plant.
 
 examples
 
 ```lua
-flowerpots.addplantlike("rose", "Rose", "flowers:rose", "flowers_rose.png", {-0.25, -0.5, -0.25, 0.25, 0.5, 0.25})
-flowerpots.addplantblock("cactus", "Cactus", "default:cactus", "default_cactus_top.png", "default_cactus_side.png")
+flowerpots.addplantlike("rose", "Rose", "flowers:rose", "flowers_rose.png")
+
+flowerpots.addflatplant("waterlily", "Waterlily", "flowers:waterlily", "flowers_waterlily.png")
+
+flowerpots.addplantblock("cactus", "Cactus", "default:cactus", {"default_cactus_top.png", "default_cactus_side.png"})
+```
+
+If you need to override an item you can use..
+
+```lua
+local flowerpot_def = minetest.registered_nodes["flowerpots:pot"]
+
+local miscnode_def = table.copy(minetest.registered_nodes["misc:node"])
+
+minetest.override_item("misc:node", {
+	on_place = function(itemstack, placer, pointed_thing)
+		local pos = pointed_thing.under
+		local node = minetest.get_node(pos)
+		if node.name == "flowerpots:pot" then
+			flowerpot_def.on_rightclick(pos, node, placer, itemstack, pointed_thing)
+		else
+			miscnode_def.on_place(itemstack, placer, pointed_thing)
+		end
+	end
+})
 ```
