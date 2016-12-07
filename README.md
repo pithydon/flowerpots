@@ -1,4 +1,4 @@
-flowerpots v1.1 by pithydon (2016)
+flowerpots v1.1.1 by pithydon (2016)
 
 Adds flower pots that plants can be placed in.
 
@@ -94,7 +94,7 @@ Register rose example.
 flowerpots.add_plant(1, "rose", "Rose", "flowers:rose", "flowers_rose.png")
 ```
 
-old API, will be removed in the future:
+deprecated API:
 * flowerpots.addplantlike(name, desc, plant, tile, box)
 * flowerpots.addflatplant(name, desc, plant, tile, box)
 * flowerpots.addplantblock(name, desc, plant, tiles)

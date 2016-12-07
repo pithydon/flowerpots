@@ -256,10 +256,14 @@ if minetest.get_modpath("flowers") then
 end
 
 function flowerpots.addplantlike(name, desc, plant, tile, box)
+	minetest.log("warning", "["..minetest.get_current_modname().."] uses \"flowerpots.addplantlike\" for \""..plant..
+			"\" which is deprecated. see "..minetest.get_modpath("flowerpots").."/README.md for new api")
 	flowerpots.add_plant(1, name, desc, plant, tile, box)
 end
 
 function flowerpots.addflatplant(name, desc, plant, tile, box)
+	minetest.log("warning", "["..minetest.get_current_modname().."] uses \"flowerpots.addflatplant\" for \""..plant..
+			"\" which is deprecated. see "..minetest.get_modpath("flowerpots").."/README.md for new api")
 	local full_tiles = {tile, "blank.png"}
 	if type(tile) == "string" then
 		full_tiles = {{name = tile, backface_culling = false}, "blank.png"}
@@ -268,5 +272,7 @@ function flowerpots.addflatplant(name, desc, plant, tile, box)
 end
 
 function flowerpots.addplantblock(name, desc, plant, tiles)
+	minetest.log("warning", "["..minetest.get_current_modname().."] uses \"flowerpots.addplantblock\" for \""..plant..
+			"\" which is deprecated. see "..minetest.get_modpath("flowerpots").."/README.md for new api")
 	flowerpots.add_plant(7, name, desc, plant, tiles, nil)
 end
