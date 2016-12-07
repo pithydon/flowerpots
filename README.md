@@ -1,4 +1,4 @@
-flowerpots by pithydon (2016)
+flowerpots v1.1 by pithydon (2016)
 
 Adds flower pots that plants can be placed in.
 
@@ -36,61 +36,65 @@ For these and/or other purposes and motivations, and without any expectation of 
 	d.	Affirmer understands and acknowledges that Creative Commons is not a party to this document and has no duty or obligation with respect to this CC0 or use of the Work.
 ```
 
-mod api:
+mod API:
 
-For plants with plantlike drawtype use...
+To register a plant to be placed in a flowerpot use...
 
-	flowerpots.addplantlike(subname, subdescription, item_to_place_in_pot, texture, selection_box)
+```lua
+flowerpots.add_plant(type_number, subname, subdescription, item_to_place_in_pot, texture, selection_box)
+```
 
-For plants that are flat on the ground use...
+If an item has "on_place" you will need to override it.
 
-	flowerpots.addflatplant(subname, subdescription, item_to_place_in_pot, texture, selection_box)
+An easy way to override "on_place" is to use "flowerpots.add_plant_with_on_place" instead of "flowerpots.add_plant"
 
-For plants that are a block use...
-
-	flowerpots.addplantblock(subname, subdescription, item_to_place_in_pot, texture)
+```lua
+flowerpots.add_plant_with_on_place(type_number, subname, subdescription, item_to_place_in_pot, texture, selection_box)
+```
 
 inputs
+* type_number,
+	* 1 = "x" shaped plant (ordinary plant)
+	* 2 = "+" shaped plant (just rotated 45 degrees)
+	* 3 = "*" shaped plant with 3 faces instead of 2
+	* 4 = "#" shaped plant with 4 faces instead of 2
+	* 5 = "□" shaped plant with 4 faces instead of 2
+	* 6 = flat shaped plant
+	* 7 = solid cube plant
 * subname, -- Full name will be ["flowerpots:pot_"..subname].
 * subdescription, -- Full description will be [subdescription.." in a pot."].
 * item_to_place_in_pot, -- If item hase on_place then on_place must be overwritten.
-* texture, -- Single texture, in flowerpots.addplantblock() it can also be a table up to 5 textures +Y, +X, -X, +Z, -Z.
+* texture,
+	* type_number 1 uses a single texture.
+	* type_number 2 uses a single texture.
+	* type_number 3 uses a single texture.
+	* type_number 4 uses up to 4 textures +X, -X, +Z, -Z.
+	* type_number 5 uses up to 4 textures +X, -X, +Z, -Z.
+	* type_number 6 uses up to 2 textures +Y, -Y.
+	* type_number 7 uses up to 5 textures +Y, +X, -X, +Z, -Z.
 * selection_box, -- optional
 
-For a custom plant use...
+For a custom plant type use...
 
 ```lua
 flowerpots.plants["item_to_place_in_pot"] = "plant_in_pot_node_name"
 ```
 
-You need to register your own "plant_in_pot_node" for a custom plant.
+You need to register your own "plant_in_pot_node" for a custom plant type.
 
-examples
-
-```lua
-flowerpots.addplantlike("rose", "Rose", "flowers:rose", "flowers_rose.png")
-
-flowerpots.addflatplant("waterlily", "Waterlily", "flowers:waterlily", "flowers_waterlily.png")
-
-flowerpots.addplantblock("cactus", "Cactus", "default:cactus", {"default_cactus_top.png", "default_cactus_side.png"})
-```
-
-If you need to override an item you can use..
+To take a plant out of a custom plant type pot you will need to set "on_punch" to...
 
 ```lua
-local flowerpot_def = minetest.registered_nodes["flowerpots:pot"]
-
-local miscnode_def = table.copy(minetest.registered_nodes["misc:node"])
-
-minetest.override_item("misc:node", {
-	on_place = function(itemstack, placer, pointed_thing)
-		local pos = pointed_thing.under
-		local node = minetest.get_node(pos)
-		if node.name == "flowerpots:pot" then
-			flowerpot_def.on_rightclick(pos, node, placer, itemstack, pointed_thing)
-		else
-			miscnode_def.on_place(itemstack, placer, pointed_thing)
-		end
-	end
-})
+on_punch = flowerpots.take_plant("item_to_place_in_pot")
 ```
+
+Register rose example.
+
+```lua
+flowerpots.add_plant(1, "rose", "Rose", "flowers:rose", "flowers_rose.png")
+```
+
+old API, will be removed in the future:
+* flowerpots.addplantlike(name, desc, plant, tile, box)
+* flowerpots.addflatplant(name, desc, plant, tile, box)
+* flowerpots.addplantblock(name, desc, plant, tiles)
