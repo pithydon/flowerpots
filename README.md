@@ -1,4 +1,4 @@
-flowerpots v1.1.1 by pithydon (2016)
+flowerpots v1.2 by pithydon (2016)
 
 Adds flower pots that plants can be placed in.
 
@@ -44,14 +44,6 @@ To register a plant to be placed in a flowerpot use...
 flowerpots.add_plant(type_number, subname, subdescription, item_to_place_in_pot, texture, selection_box)
 ```
 
-If an item has "on_place" you will need to override it.
-
-An easy way to override "on_place" is to use "flowerpots.add_plant_with_on_place" instead of "flowerpots.add_plant"
-
-```lua
-flowerpots.add_plant_with_on_place(type_number, subname, subdescription, item_to_place_in_pot, texture, selection_box)
-```
-
 inputs
 * type_number,
 	* 1 = "x" shaped plant (ordinary plant)
@@ -63,7 +55,7 @@ inputs
 	* 7 = solid cube plant
 * subname, -- Full name will be ["flowerpots:pot_"..subname].
 * subdescription, -- Full description will be [subdescription.." in a pot."].
-* item_to_place_in_pot, -- If item hase on_place then on_place must be overwritten.
+* item_to_place_in_pot, -- If item hase "on_place" then "on_place" must be overwritten.
 * texture,
 	* type_number 1 uses a single texture.
 	* type_number 2 uses a single texture.
@@ -73,6 +65,18 @@ inputs
 	* type_number 6 uses up to 2 textures +Y, -Y.
 	* type_number 7 uses up to 5 textures +Y, +X, -X, +Z, -Z.
 * selection_box, -- optional
+
+To override "on_place" you can use...
+
+```lua
+flowerpots.override_on_place(item_to_place_in_pot)
+```
+
+To override "on_place" and register a plant with one command use "flowerpots.add_plant_with_on_place" instead of "flowerpots.add_plant"
+
+```lua
+flowerpots.add_plant_with_on_place(type_number, subname, subdescription, item_to_place_in_pot, texture, selection_box)
+```
 
 For a custom plant type use...
 

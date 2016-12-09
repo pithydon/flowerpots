@@ -28,9 +28,11 @@ minetest.register_node("flowerpots:pot", {
 	},
 	groups = {dig_immediate = 2},
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
-		if not minetest.is_protected(pos, clicker:get_player_name()) then
+		local player_name = clicker:get_player_name()
+		if not minetest.is_protected(pos, player_name) then
 			for k,v in pairs(flowerpots.plants) do
 				if itemstack:get_name() == k then
+					minetest.log("action", player_name.." places "..k.." in flowerpots:pot at "..minetest.pos_to_string(pos))
 					minetest.swap_node(pos, {name = v, param2 = node.param2})
 					if not creative then
 						itemstack:take_item()
@@ -58,7 +60,9 @@ end
 
 function flowerpots.take_plant(plant)
 	local take_plant = function(pos, node, puncher, pointed_thing)
-		if not minetest.is_protected(pos, puncher:get_player_name()) then
+		local player_name = puncher:get_player_name()
+		if not minetest.is_protected(pos, player_name) then
+			minetest.log("action", player_name.." takes "..plant.." from flowerpots:pot at "..minetest.pos_to_string(pos))
 			minetest.swap_node(pos, {name = "flowerpots:pot", param2 = node.param2})
 			local inv = puncher:get_inventory()
 			if creative then
@@ -166,18 +170,18 @@ function flowerpots.add_plant(t, name, desc, plant, tiles, slbox)
 	flowerpots.plants[plant] = "flowerpots:pot_"..name
 end
 
-function flowerpots.add_plant_with_on_place(t, name, desc, plant, tiles, slbox)
-	flowerpots.add_plant(t, name, desc, plant, tiles, slbox)
-
+function flowerpots.override_on_place(plant)
 	local override_def = table.copy(minetest.registered_items[plant])
 	minetest.override_item(plant, {
 		on_place = function(itemstack, placer, pointed_thing)
 			local pos = pointed_thing.under
 			local node = minetest.get_node(pos)
 			if node.name == "flowerpots:pot" then
-				if not minetest.is_protected(pos, placer:get_player_name()) then
+				local player_name = placer:get_player_name()
+				if not minetest.is_protected(pos, player_name) then
 					for k,v in pairs(flowerpots.plants) do
 						if itemstack:get_name() == k then
+							minetest.log("action", player_name.." places "..k.." in flowerpots:pot at "..minetest.pos_to_string(pos))
 							minetest.swap_node(pos, {name = v, param2 = node.param2})
 							if not creative then
 								itemstack:take_item()
@@ -195,24 +199,50 @@ function flowerpots.add_plant_with_on_place(t, name, desc, plant, tiles, slbox)
 	})
 end
 
+function flowerpots.add_plant_with_on_place(t, name, desc, plant, tiles, slbox)
+	flowerpots.add_plant(t, name, desc, plant, tiles, slbox)
+	flowerpots.override_on_place(plant)
+end
+
 flowerpots.add_plant(1, "sapling", "Sapling", "default:sapling", "default_sapling.png")
 flowerpots.add_plant(1, "junglesapling", "Jungle Sapling", "default:junglesapling", "default_junglesapling.png")
 flowerpots.add_plant(1, "pine_sapling", "Pine Sapling", "default:pine_sapling", "default_pine_sapling.png")
 flowerpots.add_plant(1, "acacia_sapling", "Acacia Tree Sapling", "default:acacia_sapling", "default_acacia_sapling.png")
-flowerpots.add_plant(1, "aspen_sapling", "Aspen Tree Sapling", "default:aspen_sapling", "default_aspen_sapling.png")
 flowerpots.add_plant(1, "dry_shrub", "Dry Shrub", "default:dry_shrub", "default_dry_shrub.png",
 		{{-0.1875, -0.5, -0.1875, 0.1875, -0.3125, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, 0.125, 0.25}})
 flowerpots.add_plant(7, "cactus", "Cactus", "default:cactus", {"default_cactus_top.png", "default_cactus_side.png"})
-flowerpots.add_plant(5, "grass", "Grass", "default:grass_1", "default_grass_3.png",
-		{{-0.1875, -0.5, -0.1875, 0.1875, 0.125, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
-flowerpots.add_plant(5, "dry_grass", "Dry Grass", "default:dry_grass_1", "default_dry_grass_3.png",
-		{{-0.1875, -0.5, -0.1875, 0.1875, 0.25, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
 flowerpots.add_plant(1, "junglegrass", "Jungle Grass", "default:junglegrass", "default_junglegrass.png")
 flowerpots.add_plant(5, "papyrus", "Papyrus", "default:papyrus", "default_papyrus.png")
 
+if default.NAME == "tng" then
+	flowerpots.add_plant(1, "birch_sapling", "Birch Tree Sapling", "default:birch_sapling", "default_birch_sapling.png")
+	flowerpots.add_plant(1, "maple_sapling", "Maple Tree Sapling", "default:maple_sapling", "default_maple_sapling.png")
+	flowerpots.add_plant(1, "red_maple_sapling", "Red Maple Tree Sapling", "default:red_maple_sapling", "default_red_maple_sapling.png")
+	flowerpots.add_plant(1, "cherry_sapling", "Cherry Tree Sapling", "default:cherry_sapling", "default_cherry_sapling.png")
+	flowerpots.add_plant_with_on_place(5, "grass", "Grass", "default:grass_5", "default_grass_3.png",
+			{{-0.1875, -0.5, -0.1875, 0.1875, 0.125, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
+	flowerpots.add_plant_with_on_place(5, "dry_grass", "Dry Grass", "default:dry_grass_5", "default_dry_grass_3.png",
+			{{-0.1875, -0.5, -0.1875, 0.1875, 0.25, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
+else
+	flowerpots.add_plant(1, "aspen_sapling", "Aspen Tree Sapling", "default:aspen_sapling", "default_aspen_sapling.png")
+	flowerpots.add_plant_with_on_place(5, "grass", "Grass", "default:grass_1", "default_grass_3.png",
+			{{-0.1875, -0.5, -0.1875, 0.1875, 0.125, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
+	flowerpots.add_plant_with_on_place(5, "dry_grass", "Dry Grass", "default:dry_grass_1", "default_dry_grass_3.png",
+			{{-0.1875, -0.5, -0.1875, 0.1875, 0.25, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
+end
+
 if minetest.get_modpath("farming") then
-	flowerpots.add_plant_with_on_place(5, "wheat", "Wheat", "farming:seed_wheat", "farming_wheat_8.png")
-	flowerpots.add_plant_with_on_place(1, "cotton", "Cotton", "farming:seed_cotton", "farming_cotton_8.png")
+	if default.NAME == "tng" then
+		flowerpots.add_plant(1, "garden", "Garden", "farming:garden", "farming_garden.png")
+		flowerpots.add_plant_with_on_place(5, "wheat", "Wheat", "farming:wheat_seed", "farming_wheat_8.png")
+		flowerpots.add_plant_with_on_place(1, "cotton", "Cotton", "farming:cotton_seed", "farming_cotton_8.png")
+		flowerpots.add_plant_with_on_place(1, "potato", "Potato", "farming:potato", "farming_potato_3.png")
+		flowerpots.add_plant_with_on_place(1, "strawberry", "Strawberries", "farming:strawberry", "farming_strawberry_7.png")
+		flowerpots.add_plant_with_on_place(1, "lettuce", "Lettuce", "farming:lettuce", "farming_lettuce_7.png")
+	else
+		flowerpots.add_plant_with_on_place(5, "wheat", "Wheat", "farming:seed_wheat", "farming_wheat_8.png")
+		flowerpots.add_plant_with_on_place(1, "cotton", "Cotton", "farming:seed_cotton", "farming_cotton_8.png")
+	end
 
 	if farming.mod == "redo" then
 		flowerpots.add_plant_with_on_place(5, "barley", "Barley", "farming:seed_barley", "farming_barley_7.png")
