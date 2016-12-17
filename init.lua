@@ -26,7 +26,7 @@ minetest.register_node("flowerpots:pot", {
 			{-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}
 		}
 	},
-	groups = {dig_immediate = 2},
+	groups = {snappy = 3, cracky = 3, oddly_breakable_by_hand = 3},
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		local player_name = clicker:get_player_name()
 		if not minetest.is_protected(pos, player_name) then
@@ -34,11 +34,10 @@ minetest.register_node("flowerpots:pot", {
 				if itemstack:get_name() == k then
 					minetest.log("action", player_name.." places "..k.." in flowerpots:pot at "..minetest.pos_to_string(pos))
 					minetest.swap_node(pos, {name = v, param2 = node.param2})
+					minetest.sound_play({name = "default_place_node", gain=1.0}, {pos = pos})
 					if not creative then
 						itemstack:take_item()
 						return itemstack
-					else
-						return
 					end
 				end
 			end
@@ -64,6 +63,7 @@ function flowerpots.take_plant(plant)
 		if not minetest.is_protected(pos, player_name) then
 			minetest.log("action", player_name.." takes "..plant.." from flowerpots:pot at "..minetest.pos_to_string(pos))
 			minetest.swap_node(pos, {name = "flowerpots:pot", param2 = node.param2})
+			minetest.sound_play({name = "default_grass_footstep", gain = 0.7}, {pos = pos})
 			local inv = puncher:get_inventory()
 			if creative then
 				if not inv:contains_item("main", plant) then
@@ -163,7 +163,7 @@ function flowerpots.add_plant(t, name, desc, plant, tiles, slbox)
 			type = "fixed",
 			fixed = slbox
 		},
-		groups = {dig_immediate = 2, not_in_creative_inventory = 1},
+		groups = {snappy = 3, cracky = 3, oddly_breakable_by_hand = 3, not_in_creative_inventory = 1},
 		on_punch = flowerpots.take_plant(plant)
 	})
 
@@ -183,6 +183,7 @@ function flowerpots.override_on_place(plant)
 						if itemstack:get_name() == k then
 							minetest.log("action", player_name.." places "..k.." in flowerpots:pot at "..minetest.pos_to_string(pos))
 							minetest.swap_node(pos, {name = v, param2 = node.param2})
+							minetest.sound_play({name = "default_place_node", gain=1.0}, {pos = pos})
 							if not creative then
 								itemstack:take_item()
 								return itemstack
@@ -243,30 +244,6 @@ if minetest.get_modpath("farming") then
 		flowerpots.add_plant_with_on_place(5, "wheat", "Wheat", "farming:seed_wheat", "farming_wheat_8.png")
 		flowerpots.add_plant_with_on_place(1, "cotton", "Cotton", "farming:seed_cotton", "farming_cotton_8.png")
 	end
-
-	if farming.mod == "redo" then
-		flowerpots.add_plant_with_on_place(5, "barley", "Barley", "farming:seed_barley", "farming_barley_7.png")
-		flowerpots.add_plant_with_on_place(1, "blueberries", "Blueberries", "farming:blueberries", "farming_blueberry_4.png",
-				{{-0.1875, -0.5, -0.1875, 0.1875, -0.3125, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, 0.3125, 0.25}})
-		flowerpots.add_plant_with_on_place(1, "carrot", "Carrot", "farming:carrot", "farming_carrot_8.png",
-				{{-0.1875, -0.5, -0.1875, 0.1875, 0.3125, 0.1875},{-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
-		flowerpots.add_plant_with_on_place(1, "cocoa_beans", "Cocoa Beans", "farming:cocoa_beans", "farming_cocoa_3.png")
-		flowerpots.add_plant_with_on_place(1, "coffee_beans", "Coffee Beans", "farming:coffee_beans", "farming_coffee_5.png")
-		flowerpots.add_plant_with_on_place(1, "corn", "Corn", "farming:corn", "farming_corn_5.png",
-				{{-0.1875, -0.5, -0.1875, 0.1875, 0.5, 0.1875},{-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
-		flowerpots.add_plant_with_on_place(5, "cucumber", "Cucumber", "farming:cucumber", "farming_cucumber_4.png",
-				{{-0.1875, -0.5, -0.1875, 0.1875, 0.3125, 0.1875},{-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
-		flowerpots.add_plant_with_on_place(5, "grapes", "Grapes", "farming:grapes", "farming_grapebush.png",
-				{{-0.1875, -0.5, -0.1875, 0.1875, 0.0625, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
-		flowerpots.add_plant_with_on_place(1, "melon", "Melon", "farming:melon_slice", "farming_melon_5.png",
-				{{-0.1875, -0.5, -0.1875, 0.1875, 0.5, 0.1875},{-0.25, -0.3125, -0.25, 0.25, -0.125, 0.25}})
-		flowerpots.add_plant_with_on_place(1, "potato", "Potato", "farming:potato", "farming_potato_4.png")
-		flowerpots.add_plant_with_on_place(1, "pumpkin", "Pumpkin", "farming:pumpkin_slice", "farming_pumpkin_5.png")
-		flowerpots.add_plant_with_on_place(1, "raspberries", "Raspberries", "farming:raspberries", "farming_raspberry_4.png",
-				{{-0.1875, -0.5, -0.1875, 0.1875, -0.3125, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, 0.3125, 0.25}})
-		flowerpots.add_plant_with_on_place(1, "rhubarb", "Rhubarb", "farming:rhubarb", "farming_rhubarb_3.png")
-		flowerpots.add_plant_with_on_place(1, "tomato", "Tomato", "farming:tomato", "farming_tomato_8.png")
-	end
 end
 
 if minetest.get_modpath("flowers") then
@@ -283,26 +260,4 @@ if minetest.get_modpath("flowers") then
 	flowerpots.add_plant(1, "mushroom_brown", "Brown Mushroom", "flowers:mushroom_brown", "flowers_mushroom_brown.png",
 			{{-0.1875, -0.5, -0.1875, 0.1875, -0.3125, 0.1875}, {-0.25, -0.3125, -0.25, 0.25, 0.3125, 0.25}})
 	flowerpots.add_plant_with_on_place(6, "waterlily", "Waterlily", "flowers:waterlily", {"flowers_waterlily.png", "flowers_waterlily.png^[transformFY"})
-end
-
-function flowerpots.addplantlike(name, desc, plant, tile, box)
-	minetest.log("warning", "["..minetest.get_current_modname().."] uses \"flowerpots.addplantlike\" for \""..plant..
-			"\" which is deprecated. see "..minetest.get_modpath("flowerpots").."/README.md for new api")
-	flowerpots.add_plant(1, name, desc, plant, tile, box)
-end
-
-function flowerpots.addflatplant(name, desc, plant, tile, box)
-	minetest.log("warning", "["..minetest.get_current_modname().."] uses \"flowerpots.addflatplant\" for \""..plant..
-			"\" which is deprecated. see "..minetest.get_modpath("flowerpots").."/README.md for new api")
-	local full_tiles = {tile, "blank.png"}
-	if type(tile) == "string" then
-		full_tiles = {{name = tile, backface_culling = false}, "blank.png"}
-	end
-	flowerpots.add_plant(6, name, desc, plant, full_tiles, box)
-end
-
-function flowerpots.addplantblock(name, desc, plant, tiles)
-	minetest.log("warning", "["..minetest.get_current_modname().."] uses \"flowerpots.addplantblock\" for \""..plant..
-			"\" which is deprecated. see "..minetest.get_modpath("flowerpots").."/README.md for new api")
-	flowerpots.add_plant(7, name, desc, plant, tiles, nil)
 end

@@ -1,10 +1,6 @@
-flowerpots v1.2 by pithydon (2016)
+flowerpots v2.0
 
 Adds flower pots that plants can be placed in.
-
-Forum: https://forum.minetest.net/viewtopic.php?t=15265
-
-Github: https://github.com/pithydon/flowerpots
 
 License for all of this mod is "CC0", see below.
 
@@ -97,8 +93,3 @@ Register rose example.
 ```lua
 flowerpots.add_plant(1, "rose", "Rose", "flowers:rose", "flowers_rose.png")
 ```
-
-deprecated API:
-* flowerpots.addplantlike(name, desc, plant, tile, box)
-* flowerpots.addflatplant(name, desc, plant, tile, box)
-* flowerpots.addplantblock(name, desc, plant, tiles)
