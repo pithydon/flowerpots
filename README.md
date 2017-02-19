@@ -1,4 +1,4 @@
-flowerpots v2.0
+flowerpots v2.0.1
 
 Adds flower pots that plants can be placed in.
 

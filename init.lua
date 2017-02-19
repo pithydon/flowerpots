@@ -194,7 +194,7 @@ function flowerpots.override_on_place(plant)
 					end
 				end
 			else
-				override_def.on_place(itemstack, placer, pointed_thing)
+				return override_def.on_place(itemstack, placer, pointed_thing)
 			end
 		end
 	})
