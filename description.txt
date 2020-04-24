@@ -1,1 +1,0 @@
-Adds flower pots that plants can be placed in.
