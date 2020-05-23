@@ -1,6 +1,6 @@
 flowerpots = {plants = {}}
 
-local creative = minetest.setting_getbool("creative_mode")
+local creative = minetest.settings:get_bool("creative_mode")
 
 minetest.register_node("flowerpots:pot", {
 	description = "Flower Pot",
@@ -30,8 +30,9 @@ minetest.register_node("flowerpots:pot", {
 	on_rightclick = function(pos, node, clicker, itemstack, pointed_thing)
 		local player_name = clicker:get_player_name()
 		if not minetest.is_protected(pos, player_name) then
+			local name = itemstack:get_name()
 			for k,v in pairs(flowerpots.plants) do
-				if itemstack:get_name() == k then
+				if name == k then
 					minetest.log("action", player_name.." places "..k.." in flowerpots:pot at "..minetest.pos_to_string(pos))
 					minetest.swap_node(pos, {name = v, param2 = node.param2})
 					minetest.sound_play({name = "default_place_node", gain=1.0}, {pos = pos})
